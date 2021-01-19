@@ -1,0 +1,11 @@
+{% extends 'pkflibrary/book/book_list.html.twig '%}
+
+{% block status %}
+	{% if keyword == "" %}
+       <li>{{subCategory.category.categoryName}}</li>
+   <li>{{subCategory.subCategoryName}}</li>
+    {% else %}
+       <li>Search results for "{{keyword}}": {{ pagination.getTotalItemCount }} books found</li>
+    {% endif %}
+   
+{% endblock %}

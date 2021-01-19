@@ -1,0 +1,136 @@
+{% extends 'pkflibrary/base.html.twig '%}
+
+{% block menu %}
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right" style="font-weight:bold;background-color:black;">
+            <li>
+                <a href="{{ path('homepage',{'page': 1}) }}"><i class="fa fa-home"></i> Home</a>
+            </li>
+            {% if is_granted("ROLE_ADMIN") %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Management <b class="caret"></b></a>
+                    <ul class="dropdown-menu"  >
+                        <li>
+                           <a href="{{ path('AdminUserEnableList',{'page': 1}) }}" style="font-family:calibri"> <i class="fa fa-user"></i> User Management</a>
+                       </li>
+                       <li>
+                        <a href="{{ path('manageBorrows') }}" style="font-family:calibri" > <i class="fa fa-book"></i>  Borrow Management</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('categoryList') }}" style="font-family:calibri" > <i class="fa fa-navicon"></i>  Category Management</a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+        <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> My Account <b class="caret"></b></a>
+            <ul class="dropdown-menu"  >
+                <li>
+                    <a href="{{ path('borrow', {'userId': app.user.id, 'bookId':-1}) }}" style="font-family:calibri"> <i class="fa fa-book"></i> Borrow Reports </a>
+                </li>
+                <li class="active">
+                    <a href="{{ path('UserDetail',{'id': app.user.Id ,'page': page}) }}" style="font-family:calibri"><i class="fa fa-user"></i> My Personal data</a>
+                </li>
+
+            </ul>
+        </li>
+        <li>
+            <a href="{{ path('about') }}">About</a>
+        </li>
+        <li>
+            <a href="{{ path('help') }}">Help</a>
+        </li>
+        <li>
+             <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+        </li>
+ </ul>
+</div>
+<!-- /.navbar-collapse -->
+{% endblock %}
+
+{% block status %}
+          <li><a class="active" href="#" style="color:black">My Account / Personal Data </a></li>   
+{% endblock %}
+
+{% block content %}
+
+<!-- Projects Row -->
+        <div class="row">
+            
+            
+            <div class="col-md-7 img-portfolio" >
+                {#<a href=" {{ path('adminUserList',{'page': page}) }}">#}
+					                  
+                        <img class="img-responsive img-hover"  width="400px" height="600px" src="{{ asset(user.image.uploadDir ~ '/' ~ user.image.id ~ '.' ~ user.image.url) }}" 
+                             alt="{{ user.image.alt }}" style="margin-bottom:5px;"
+                         />
+            </div>            
+					
+            
+            <div class="col-md-5 dariusDiv" style="border-radius: 1; font-family:calibri">
+
+               <p> Name : <span class="dariusSpan">{{user.familyName}} {{user.firstName}} </span> </p>
+               <p> Username : <span class="dariusSpan">{{user.username}}</span> </p>
+               <p> Email : <span class="dariusSpan">{{user.email}}</span> </p>
+               <p> Phone number : <span class="dariusSpan">{{user.phoneNumber}} </span> </p>
+               <p> Adress: <span class="dariusSpan">{{user.address}}  </span> </p>
+               <p> User Category: <span class="dariusSpan">{{user.userCategory}} </span> </p>
+               <p> Batch: <span class="dariusSpan">{{user.batch}} </span> </p>
+               <p> Specialty: <span class="dariusSpan">{{user.specialty}} </span> </p>
+                
+                <a class="btn btn-default" href="{{ path('editUser',{'id':user.Id})}}"><i class="fa fa-edit"></i> Edit</a>
+                {% if is_granted("ROLE_ADMIN") %}
+                  {% if user.enabled == false %}
+                     <a class="btn btn-success" onclick= "disabled" href="{{path('AdminUserEnabled',{'id':user.Id,'page': page})}}" >Enable</a>
+                  {% else %}
+                      <a class="btn btn-default" onclick= "disabled" href="{{path('AdminUserDisable',{'id':user.Id,'page': page})}}" style="background-color:black; color:white">Disable</i> </a>
+                  {% endif %}
+                <a class="btn btn-danger" data-toggle="modal" data-target="#myModalDeleteUser"><i class="fa fa-remove"></i> Delete</a>
+                {% endif %}
+            </div>
+
+            {% if is_granted("ROLE_ADMIN") %}
+            {% if user.enabled == false %}
+                   <a class="btn btn-default" style = "float:right; margin-top:1%; font-weight:bold; color:blue" href="{{ path('AdminUserDisableList',{'page': 1}) }}" >Back to list</a>
+                {% else %}
+                   <a class="btn btn-default" style = "float:right; margin-top:1%; font-weight:bold; color:blue" href="{{ path('AdminUserEnableList',{'page': 1}) }}" > <i class="fa fa-back"></i> Back to list</a>
+            {% endif %}
+            {% endif %}
+            
+        </div>
+        <!-- /.row -->		
+
+        <div class="modal fade" id="myModalDeleteUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:15%">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelDeleteUser" style="text-align:center; color:blue">{{user.familyName}} {{user.firstName}}</h4>
+              </div>
+              <div class="modal-body row" style="">
+                  <div class="" style="font-family:calibri; margin-top:0">  
+                  <p style="text-align:center; font-size:20px">Are you sure to detele?</p>
+                </div> 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a href="{{ path('deleteUser',{'id': user.id}) }}" class="btn btn-danger" style="float:right">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+		
+{% endblock %}
+
+{% block pagination %}
+{% endblock %}
+
+{% block footer %}
+   <div class="row" style="position: fixed; bottom: 0; width:100%;margin-top:20px;">
+     <center>
+        <p style="font-weight:bold;color:white;background-color: black;margin:0; margin-right:-10%;height:70px;padding-top: 30px;">Copyright &copy; PKFokam Institute Of Excellence</p>
+    </center>
+</div>
+{% endblock %}

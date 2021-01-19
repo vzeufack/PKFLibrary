@@ -1,0 +1,84 @@
+
+{% extends 'pkflibrary/miscellanous.html.twig '%}
+
+{% block about %}
+	<li class="active">                          
+		<a href="{{app.request.schemeAndHttpHost ~ path('about') }}">About</a>                        
+	</li>
+{% endblock %}
+{% block body %}
+	   <div class="row" style="margin-top:5%;">
+	        <div class="col-md-5" style="margin-left:5%">
+	            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+	                <!-- Indicators -->
+	                <ol class="carousel-indicators">
+	                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+	                    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+	                    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+	                    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+	                    <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+	                </ol>
+	 
+	                <!-- Wrapper for slides -->
+	                <div class="carousel-inner">
+	                    <div class="item active">
+	                        <img class="img-responsive" src="{{app.request.schemeAndHttpHost ~ asset('Library Images/egypt_02.jpg') }}" alt="">
+	                    </div>
+	                    <div class="item">
+	                        <img class="img-responsive" src="{{app.request.schemeAndHttpHost ~ asset('Library Images/egypt_05.jpg') }}" alt="">
+	                    </div>
+	                    <div class="item">
+	                        <img class="img-responsive" src="{{app.request.schemeAndHttpHost ~ asset('Library Images/egypt_06.jpg') }}" alt="">
+	                    </div>
+	                    <div class="item">
+	                        <img class="img-responsive" src="{{app.request.schemeAndHttpHost ~ asset('Library Images/egypt_07.jpg') }}" alt="">
+	                    </div>
+	                    <div class="item">
+	                        <img class="img-responsive" src="{{app.request.schemeAndHttpHost ~ asset('Library Images/egypt_01.jpg') }}" alt="">
+	                    </div>
+	                </div>
+
+	                <!-- Controls -->
+	                <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+	                    <span class="glyphicon glyphicon-chevron-left"></span>
+	                </a>
+	                <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+	                    <span class="glyphicon glyphicon-chevron-right"></span>
+	                </a>
+	            </div>
+	        </div>
+
+	        <div class="col-md-5" style="text-align: justify;">
+	            <div class="panel panel-default" style="margin:auto; width:100%; height:100%;">
+	            	<div class="panel-heading">
+                    	<h2 style="text-align:center">About the software</h2>
+                	</div>  
+                	<div class="panel-body"> 
+		            	<p><span class="appliDecoration">Application name: </span>PKFLibray</p>
+		            	<p><span class="appliDecoration">Version: </span>1.1</p>
+		                <h4 id="details">Application description</h4>
+		                <p>
+			                PKFLibrary is a a web based tool designed to provide students, as well as lecturers and other interested users with a tool allowing them to have a virtual access to the PKFokam Institute of Excellence Library. Through this tools, users will be able to:	                
+		                </p>
+		                <ul>
+		                	<li>See all the books currently available at the library;</li>
+		                	<li>Find out whether or not a given book is in the library;</li>
+		                	<li>Reserve a book (and collect it in 24hrs latest);</li>
+		                	<li>In addition to the operations mentioned above, the librerian will be abble to carry out some administrative operations such as: managing books, users and borrows.</li>
+			            </ul>
+			            <p>For more information on how to perform those operations consult the <a href="{{app.request.schemeAndHttpHost ~ path('help') }}"> help</a>.</p>
+			        </div>
+	   		 	</div>
+			</div>
+	</div>
+{% endblock %}
+
+
+{% block footer %}
+    <div class="row" style="position: fixed; bottom: 0; width:100%;margin-top:20px;">
+   <!-- Footer -->
+     <center>
+        <p style="font-weight:bold;color:white;background-color: black;margin:0;height:70px; padding-top: 25px; margin-right:-10%;;">Copyright &copy; PKFokam Institute Of Excellence</p>
+    </center>
+   </div>
+{% endblock %}

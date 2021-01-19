@@ -1,0 +1,153 @@
+{% extends 'pkflibrary/base.html.twig '%}
+
+{% block stylesheets %}
+  {{ parent() }}
+  <link href="{{app.request.schemeAndHttpHost ~ asset('assets/css/book_list.css')}}" rel="stylesheet"/>
+{% endblock %}
+
+{% block menu %}
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right" style="font-weight:bold;background-color:black;">
+            <li class="active">
+                <a href="{{app.request.schemeAndHttpHost ~ path('homepage') }}"><i class="fa fa-home"></i> Home</a>
+            </li>
+            {% if is_granted("ROLE_ADMIN") %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Management <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                         <a href="{{app.request.schemeAndHttpHost ~ path('AdminUserEnableList',{'page': 1}) }}" style="font-family:calibri"> <i class="fa fa-user"></i> User Management</a>
+                     </li>
+                     <li>
+                        <a href="{{app.request.schemeAndHttpHost ~ path('manageBorrows') }}" style="font-family:calibri" > <i class="fa fa-book"></i> Borrow Management</a>
+                    </li>
+                    <li>
+                        <a href="{{app.request.schemeAndHttpHost ~ path('categoryList') }}" style="font-family:calibri" > <i class="fa fa-navicon"></i> Category Management</a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> My Account <b class="caret"></b></a>
+            <ul class="dropdown-menu"  >
+                <li>
+                    <a href="{{app.request.schemeAndHttpHost ~ path('borrow', {'userId': app.user.id, 'bookId':-1}) }}" style="font-family:calibri"> <i class="fa fa-book"></i> Borrow Report </a>
+                </li>
+               <li>
+                  <a href="{{app.request.schemeAndHttpHost ~ path('UserDetail',{'id': app.user.Id ,'page': 1}) }}" style="font-family:calibri"><i class="fa fa-user"></i> My Personal data</a>
+               </li>
+
+           </ul>
+       </li>
+        <li>
+            <a href="{{app.request.schemeAndHttpHost ~ path('about') }}">About</a>
+        </li>
+        <li>
+            <a href="{{app.request.schemeAndHttpHost ~ path('help') }}">Help</a>
+        </li>
+        <li>
+           <a href="{{app.request.schemeAndHttpHost ~ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+       </li>
+   </ul>
+</div>
+<!-- /.navbar-collapse -->
+{% endblock %}
+
+{% block status %}
+    {% if keyword == "" %}
+       <li style="color:blue">All Books</li>
+    {% else %}
+       <li style="color:blue">Search results for "{{keyword}}": {{ pagination.getTotalItemCount }} books found</li>
+    {% endif %}
+{% endblock %}
+
+{% block left_menu %}
+  <h4 style="text-align:center">Categories</h4>
+  <nav>
+  <ul class="nav list-group-item" style="font-family:calibri; font-size:16px">
+        <li style="text-align:left"><a href="{{app.request.schemeAndHttpHost ~ path('homepage' )}}"><i class="fa fa-navicon"></i><span style="margin-left:5%">All Books</span> </a></li>
+    {% for category in categories %}                    
+        <li><a href="{{app.request.schemeAndHttpHost ~ path('showCategoryBooks',{'code': category.categoryCode}) }}" class="" style="width:90%">{{category.categoryName}}</a><a class="toggle-custom" id="btn-1" data-toggle="collapse" data-target="#{{category.categoryCode}}" aria-expanded="true"><span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span></a>
+          <ul class="nav collapse" id="{{category.categoryCode}}" role="menu" aria-labelledby="btn-1">
+            {% for subcategory in category.subcategories %}
+            <li><a style="color:black" href="{{app.request.schemeAndHttpHost ~ path('showSubCategoryBooks',{'code': subcategory.subCategoryCode}) }}"><span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span> {{subcategory.subCategoryName}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        </li>
+    {% endfor %}
+  </ul>
+</nav> 
+    
+{% endblock %}
+
+{% block searchAdd %}
+   <div class="col-md-4"> 
+    {#<div class="input-group" style="margin-left:250px; margin-bottom:15px">
+        <input type="text" class="form-control" style="width:300px">#
+        {{form_start(form)}}
+        {{form_widget(form.keyword)}}
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ><i class="fa fa-search"></i>{{form_widget(form.submit)}}</button>
+        </span>
+        <!-- /.input-group -->
+        {{form_end(form)}}
+    </div>  #}
+    <div>
+      <table width="150%" style="border-spacing:0px 0px; border-collapse:separate; margin-left:95%"> 
+        <tr>
+          {{form_start(form)}}
+          <td>{{ form_widget(form.keyword) }}</td>
+          <td>{{ form_widget(form.submit) }}</td>
+          {{form_end(form)}}
+        </tr>
+      </table>
+    </div>                  
+  </div>
+  {% if is_granted("ROLE_ADMIN") %}
+     <a href="{{app.request.schemeAndHttpHost ~ path('addBook', {'userId': app.user.id})}}" class="btn btn-primary" style="float:right; margin-right:0px; margin-bottom:10px; font-family:calibri; font-weight:bold; font-size:16px"><i class="fa fa-plus"></i> Add book </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if keyword != "" and pagination.getTotalItemCount == 0 %}
+       <center style="margin-top:10%; font-size:20px; font-weight:bold"> No books found!</center>
+    {% else %}
+    <div class="row">
+        {% for book in pagination %}
+            <div class="col-md-2 img-portfolio" >
+                <a href=" {{app.request.schemeAndHttpHost ~ path('showBook',{'id': book.id,'userId': app.user.id}) }}">                                  
+                 {#<img class="img-responsive img-hover" src="{{ asset('uploads/' ~ book.coverPicture) }}" alt="" caption="{{book.coverPicture}}" style="margin-bottom:5px;">#}
+                     {#  {% if book.coverPicture != null%} #} 
+
+                        <img class="img-responsive img-hover"  width="200px" height="100px" src="{{ asset(book.coverPicture.uploadDir ~ '/' ~ book.coverPicture.id ~ '.' ~ book.coverPicture.url) }}" 
+                             alt="{{ book.coverPicture.alt }}" style="margin-bottom:5px;"
+                         />
+                      {# {% endif %} #}
+                               
+                 <p style="text-align:center; foreground-color:black; font-family:calibri; margin-bottom:0px">{{book.title}}</p> 
+                 <p style="text-align:center; color:black; font-family:calibri">by {{book.author}}</p>        
+             </a>
+         </div>
+         {% if loop.index % 6 == 0 %}
+         </div>
+         <div class="row">
+         {% endif %} 
+     {% endfor %} 
+ </div>
+{% endif %}
+{% endblock %}
+
+{% block pagination %}
+
+ <div class="row text-center">
+     <div class="col-lg-12">
+      {{ knp_pagination_render(pagination) }}
+   </div>
+</div>
+<!-- /.row -->
+{% endblock %}
+
+

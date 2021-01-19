@@ -1,0 +1,10 @@
+{% extends 'pkflibrary/book/book_list.html.twig '%}
+
+{% block status %}
+	{% if keyword == "" %}
+       <li><a href="" style="color:blue">{{category.categoryName}}</a></li>
+    {% else %}
+       <li>Search results for "{{keyword}}": {{ pagination.getTotalItemCount }} books found</li>
+    {% endif %}
+
+{% endblock %}

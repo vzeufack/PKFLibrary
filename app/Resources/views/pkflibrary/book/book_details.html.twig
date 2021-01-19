@@ -1,0 +1,160 @@
+{% extends 'pkflibrary/book/book_list.html.twig '%}
+
+{% block status %}
+    <li>{{book.title}} by {{book.author}}</li>
+{% endblock %}
+
+{% block searchAdd %}
+  <div class="col-md-4">
+  <div>
+      <table width="150%" style="border-spacing:0px 0px; border-collapse:separate; margin-left:95%"> 
+        <tr>
+          {{form_start(form)}}
+          <td>{{ form_widget(form.keyword) }}</td>
+          <td>{{ form_widget(form.submit) }}</td>
+          {{form_end(form)}}
+        </tr>
+      </table>
+    </div>                  
+  </div>
+  {% if is_granted("ROLE_ADMIN") %}
+     <a href="{{path('addBook', {'userId': app.user.id})}}" class="btn btn-primary" style="float:right; margin-right:0px; margin-bottom:10px; font-family:calibri; font-weight:bold; font-size:16px"><i class="fa fa-plus"></i> Add book </a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Projects Row -->
+        <div class="row" style="margin-top:5%; font-family:calibri; font-size:17px">
+            
+            
+            <div class="col-md-7 img-portfolio" style="text-align:center" >
+                <a href=" {{ path('showBook',{'id': book.id,'userId': app.user.id}) }}">
+                            
+                         {#<img class="img-responsive img-hover" src="{{ asset('uploads/' ~ book.coverPicture) }}" alt="" style="margin-left:185px; margin-top:25px"> #} 
+                          <img class="img-responsive img-hover" width="200px" height="" src="{{ asset(book.coverPicture.uploadDir ~ '/' ~ book.coverPicture.id ~ '.' ~ book.coverPicture.url) }}" 
+                             alt="{{ book.coverPicture.alt }}" style="margin-bottom:5px; margin-left:40%"
+                         />   
+          
+                </a>
+                {% if is_granted("ROLE_ADMIN") %}
+                  <a style="margin-left:20%"href="#" class="btn btn-default" data-toggle="modal" data-target="#myModal" >Details</a>
+                  <a href="{{ path('editBook',{'id': book.id, userId: app.user.id}) }}" class="btn btn-primary"><i class="fa fa-edit "></i> Edit</a>
+                  <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#myModalDelete"><i class="fa fa-pencil"></i> Delete</a>
+                {% endif %}
+            </div>
+            <div class="col-md-5" style"">
+                <h3 style="font-weight:bold">{{book.title}}</h3>
+                <h4 style="font-weight:bold">By {{book.author}}</h4>
+                <p>                
+                  Subtilte: <label style="font-style:italic">{{book.subtitle}}</label><br/>  
+                  Isbn: <label style="font-style:italic">{{book.isbn}}</label><br/>
+                  Quantity: <label style="font-style:italic">{{book.quantity}}</label><br/>
+                  Available: <label style="font-style:italic">{{book.booksAvailable}}</label><br/>
+                  Pkflib code: <label style="font-style:italic">{{book.pklibCode}}</label><br/>          
+                  Number of pages: <label style="font-style:italic">{{book.numberOfPages}}</label><br/>
+                  Subcategories: {% for sb in book.subCategories %}<label style="font-style:italic">{{sb.subCategoryName}}</label> {% endfor %}<br/>
+                  {# {% for book in book.subcategory %}
+
+                  {% endfor %} #}
+                </p>
+                <a class="btn btn-default" href="{{ asset(book.summary.uploadDir ~ '/' ~ book.summary.id ~ '.' ~ book.summary.url) }}">Summary</i></a>
+                {% if canBorrow == false %}
+                   <a class="btn btn-default" href="#" style="background-color:grey; color:white">Borrowed</a>
+                {% elseif  book.booksAvailable == 0 %} 
+                  <a class="btn btn-default" href="#" style="background-color:grey; color:white">Not Available</a>
+                {% else %}
+                   <a class="btn btn-default" data-toggle="modal" data-target="#myModalBorrow">Borrow</a>
+                {% endif %}
+
+            </div>
+            {#
+            <a href="{{ path('homepage')}}" style="float:right; color:black; font-weight:bold"><i class="fa fa-home"></i> Return</a>#}
+        </div>
+        <!-- /.row -->  
+
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel" style="text-align:center">{{book.title}} by {{book.author}}</h4>
+              </div>
+              <div class="modal-body row" style=""> 
+              <div class="col-md-6">               
+                 <img class="img-responsive img-hover " src="{{ asset(book.coverPicture.uploadDir ~ '/' ~ book.coverPicture.id ~ '.' ~ book.coverPicture.url) }}" 
+                 alt="{{ book.coverPicture.alt }}" style="margin-bottom:5px; margin-top:0; margin-feft:5%; width:200px"
+                 />  
+               </div>
+                 <div class="col-md-6" style="font-family:calibri; margin-top:0">  
+                  Subtilte: <label style="font-style:italic">{{book.subtitle}}</label><br/>               
+                  Isbn: <label style="font-style:italic">{{book.isbn}}</label><br/>
+                  Editor: <label style="font-style:italic">{{book.editor}}</label><br/>
+                  Edition: <label style="font-style:italic">{{book.edition}}</label><br/>
+                  Volume: <label style="font-style:italic">{{book.volume}}</label><br/>
+                  Year published: <label style="font-style:italic">{{book.yearPublished}}</label><br/>
+                  Date Acquired: <label style="font-style:italic">{{book.dateAcquired|date('F j, Y')}}</label><br/>
+                  Quantity: <label style="font-style:italic">{{book.quantity}}</label><br/>
+                  Pkflib code: <label style="font-style:italic">{{book.pklibCode}}</label><br/> 
+                  Ean: <label style="font-style:italic">{{book.ean}}</label><br/>         
+                  Number of pages: <label style="font-style:italic">{{book.numberOfPages}}</label><br/>
+                  Format: <label style="font-style:italic">{{book.format}}</label><br/>
+                  Color: <label style="font-style:italic">{{book.color}}</label><br/>
+                  Number of Cd: <label style="font-style:italic">{{book.cdNumber}}</label><br/>
+                  Acquisition: <label style="font-style:italic">{{book.acquisition}}</label><br/>
+                  Language: <label style="font-style:italic">{{book.language}}</label><br/>
+                  Location: <label style="font-style:italic">{{book.location}}</label><br/>
+                  State: <label style="font-style:italic">{{book.state}}</label><br/>
+                </div> 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>  
+
+        <div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:15%">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelDelete" style="text-align:center; color:blue">{{book.title}} by {{book.author}}</h4>
+              </div>
+              <div class="modal-body row" style="">
+                  <div class="" style="font-family:calibri; margin-top:0">  
+                  <p style="text-align:center; font-size:20px">Are you sure to detele?</p>
+                </div> 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a href="{{ path('deleteBook',{'id': book.id}) }}" class="btn btn-danger" style="float:right">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="myModalBorrow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="margin-top:15%">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabelBorrow" style="text-align:center; color:blue">{{book.title}} by {{book.author}}</h4>
+              </div>
+              <div class="modal-body row" style="">
+                  <div class="" style="font-family:calibri; margin-top:0">  
+                  <p style="text-align:center; font-size:20px">You have 24 hours from now to pick the book at the library. Past this delay, the book will be released. Thanks and have a nice day!</p>
+                </div> 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a href="{{ path('borrow',{'bookId': book.id, 'userId': app.user.id}) }}" class="btn btn-success" style="float:right; width:12%">OK</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+{% endblock %}
+
+{% block pagination %}
+{% endblock %} 

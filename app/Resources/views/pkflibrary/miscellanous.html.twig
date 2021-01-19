@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PKFLibrary</title>
+
+    {% block stylesheets %}
+        <link rel="shortcut icon" type="image/x-icon" href="logopkf.ico" />
+        <!-- Bootstrap Core CSS -->
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" />
+        <!-- Custom CSS -->
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/css/modern-business.css')}}" rel="stylesheet"/> 
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/css/misc.css')}}" rel="stylesheet"/> 
+        <!-- Custom Fonts -->
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet"/> 
+        <!-- TABLE STYLES-->
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/js/dataTables/dataTables.bootstrap.css' ) }}" rel="stylesheet" />
+        
+    {% endblock %}
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+            <style>
+              .dariusDiv{
+                background-color: #f5f5f5;
+                border-radius: 4px;
+                padding: 8px 15px;
+              }
+              .dariusSpan{
+                font-family : 'calibri';
+                font-size : '18px';
+                font-weight : bold ;
+                font-style: italic;
+              }
+          </style>
+
+    </head>
+
+
+    <body>
+
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="height:5%;">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <img class="img-responsive img-hover" src="{{app.request.schemeAndHttpHost ~ asset('Library Images/logopkf.png') }}" width="30px" height="35px" alt="" style="float:left; margin-right:5px; margin-top:5px">
+                    <a class="navbar-brand" style="color:white;">PKFokam Institute of Excellence Library</a>
+                </div>
+
+                {% block menu %}
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav navbar-right" style="font-weight:bold;background-color:black;">
+                            <li>
+                                <a href="{{app.request.schemeAndHttpHost ~ path('homepage',{'page': 1}) }}"><i class="fa fa-home"></i> Home</a>
+                            </li>
+                            {% if is_granted("ROLE_ADMIN") %}
+                                <li class="dropdown active">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Management <b class="caret"></b></a>
+                                    <ul class="dropdown-menu"  >
+                                        <li class="active">
+                                           <a href="{{app.request.schemeAndHttpHost ~ path('AdminUserEnableList',{'page': 1}) }}" style="font-family:calibri"> <i class="fa fa-user"></i> User Management</a>
+                                       </li>
+                                       <li>
+                                        <a href="{{app.request.schemeAndHttpHost ~ path('manageBorrows') }}" style="font-family:calibri" > <i class="fa fa-book"></i>  Borrow Management</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{app.request.schemeAndHttpHost ~ path('categoryList') }}" style="font-family:calibri" > <i class="fa fa-navicon"></i>  Category Management</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> My Account <b class="caret"></b></a>
+                            <ul class="dropdown-menu"  >
+                                <li>
+                                    <a href="{{app.request.schemeAndHttpHost ~ path('borrow', {'userId': app.user.id, 'bookId':-1}) }}" style="font-family:calibri"> <i class="fa fa-book"></i> Borrow Reports </a>
+                                </li>
+                                <li>
+                                    <a href="{{app.request.schemeAndHttpHost ~ path('UserDetail',{'id': app.user.Id ,'page': page}) }}" style="font-family:calibri"><i class="fa fa-user"></i>My Personal data</a>
+                                </li>
+
+                         </ul>
+                     </li>
+                    <li>
+                          <a href="{{app.request.schemeAndHttpHost ~ path('about') }}">About</a>
+                    </li>
+                    <li>
+                          <a href="{{app.request.schemeAndHttpHost ~ path('help') }}">Help</a>
+                    </li>
+
+                    <li>
+                         <a href="{{app.request.schemeAndHttpHost ~ path('fos_user_security_logout') }}" style="font-family:calibri"><i class="fa fa-sign-out"></i> Logout</a>
+                    </li>
+
+                 </ul>
+                </div>
+
+              {% endblock %}
+
+     </div>
+     <!-- /.container -->
+ </nav>
+
+ {% block body %}
+ <!-- Page Content -->
+ <div class="container">
+ 
+  
+   <!-- Content Row -->
+   <div class="row" >
+       
+      <div class="col-md-3"  >
+         
+       </div>
+       <div class="col-md-9"  >
+         {% block content %}
+         {% endblock %}
+       </div>
+  
+   </div>
+   <!-- /.row -->
+   
+</div>
+{% endblock %}
+<!-- /.container -->
+{% block footer %}
+        <div class="row" style="position: fixed; bottom: 0; width:100%;margin-top:20px;">
+           <!-- Footer -->
+             <center>
+                <p style="font-weight:bold;color:white;background-color: black;margin:0; height:20px;">Copyright &copy; PKFokam Institute Of Excellence</p>
+            </center>
+        </div>
+{% endblock %}
+
+
+
+{% block javascripts %}
+
+    <script type="text/javascript" src="{{app.request.schemeAndHttpHost ~ asset('assets/js/jquery.js')}}"></script> 
+    <script type="text/javascript" src="{{app.request.schemeAndHttpHost ~ asset('assets/js/bootstrap.min.js')}}"></script> 
+    <!-- Script to Activate the Carousel -->
+    <script>
+        $('.carousel').carousel({
+        interval: 5000 //changes the speed
+    })
+    </script>
+    <!-- DATA TABLE SCRIPTS -->
+    <script src="{{app.request.schemeAndHttpHost ~ asset('assets/js/dataTables/jquery.dataTables.js')}}"></script>
+    <script src="{{app.request.schemeAndHttpHost ~ asset('assets/js/dataTables/dataTables.bootstrap.js')}}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#dataTables-example').dataTable();
+        });
+    </script>
+    <!-- CUSTOM SCRIPTS -->
+
+{% endblock %}
+
+</body>
+
+</html>

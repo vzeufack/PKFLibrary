@@ -1,0 +1,260 @@
+{% extends 'pkflibrary/base.html.twig '%}
+
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+    .error_right{
+        color:red;
+        font-family:andalus;
+        font-weight:;
+        font-size:15px;
+        float:right;
+     }
+
+     .error_left{
+        color:red;
+        font-family:andalus;
+        font-weight:;
+        font-size:15px;
+     }
+  </style>
+{% endblock %}
+
+{% block menu %}
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right" style="font-weight:bold;background-color:black;">
+            <li>
+                <a href="{{ path('homepage',{'page': 1}) }}"><i class="fa fa-home"></i> Home</a>
+            </li>
+            {% if is_granted("ROLE_ADMIN") %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Management <b class="caret"></b></a>
+                    <ul class="dropdown-menu"  >
+                        <li>
+                         <a href="{{ path('AdminUserEnableList',{'page': 1}) }}" style="font-family:calibri"> <i class="fa fa-user"></i>  User Management</a>
+                     </li>
+                     <li>
+                        <a href="{{ path('manageBorrows') }}" style="font-family:calibri" > <i class="fa fa-book"></i>  Borrow Management</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('categoryList') }}" style="font-family:calibri" > <i class="fa fa-navicon"></i>  Category Management</a>
+                    </li>
+
+                </ul>
+            </li>
+        {% endif %}
+              <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> My Account <b class="caret"></b></a>
+            <ul class="dropdown-menu"  >
+                <li>
+                    <a href="{{ path('borrow', {'userId': app.user.id, 'bookId':-1}) }}" style="font-family:calibri"> <i class="fa fa-book"></i> Borrow Reports </a>
+                </li>
+                
+               <li>
+                    <a href="{{ path('UserDetail',{'id': app.user.Id ,'page': page}) }}" style="font-family:calibri"><i class="fa fa-user"></i>My Personal data</a>
+               </li>
+
+           </ul>
+       </li>
+        <li>
+            <a href="{{ path('about') }}">About</a>
+        </li>
+        <li>
+            <a href="{{ path('help') }}">Help</a>
+        </li>
+        <li>
+           <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+       </li>
+   </ul>
+</div>
+<!-- /.navbar-collapse -->
+{% endblock %}
+
+{% block status %}
+    <li>Book Registration</li>
+{% endblock %}
+
+{% block left_menu %}             
+{% endblock %}
+
+
+{% block body %}
+<div class="row">
+    <div class="panel panel-default" style="margin:auto; width:67%">
+        <div class="panel-heading">
+            <h3 style="text-align:center; margin-bottom:20px" ><i class=" fa fa-book "></i> Book Registration</h3>
+        </div>                       
+        <div class="panel-body"> 
+            <p style="margin-left:2.2%; margin-top:10px; font-family:calibri; color:blue; font-style:italic"> Note: All fields label ending with * are compulsory! </p>
+           	<div>
+           	{{form_start(form, {'novalidate':'novalidate'})}}
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <th>{{ form_label(form.title) }} *</th>
+                    <th> {{ form_label(form.subTitle) }} </th>
+                    <tr>
+                        <td>{{ form_widget(form.title) }}</td>
+                        <td>{{ form_widget(form.subTitle) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">{{ form_errors(form.title) | striptags }}</td>
+                        <td class="error_right">{{ form_errors(form.subTitle) | striptags }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <th>{{ form_label(form.author) }} *</th>
+                    <th> {{ form_label(form.editor) }} </th>
+                    <tr>
+                        <td>{{ form_widget(form.author) }}</td>
+                        <td>{{form_widget(form.editor)}}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">{{ form_errors(form.author) | striptags }}</td>
+                        <td class="error_right">{{ form_errors(form.editor) | striptags }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <th>{{ form_label(form.edition) }}</th>
+                    <th> {{ form_label(form.quantity) }} * </th>
+                    <th> {{ form_label(form.numberOfPages) }} </th>
+                    <tr>
+                        <td width="">{{ form_widget(form.edition) }}</td>
+                        <td>{{form_widget(form.quantity)}}</td>
+                        <td>{{form_widget(form.numberOfPages)}}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">{{ form_errors(form.edition) | striptags }}</td>
+                        <td class="error_left">{{ form_errors(form.quantity) | striptags }}</td>
+                        <td class="error_right">{{ form_errors(form.numberOfPages) | striptags }}</td>
+                    </tr>
+                </table>
+                
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <th>{{ form_label(form.dateAcquired) }} *</th>
+                    <th> {{ form_label(form.yearPublished) }} </th>
+                    <tr>
+                        <td>{{ form_widget(form.dateAcquired) }}</td>
+                        <td>{{ form_widget(form.yearPublished) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">{{ form_errors(form.dateAcquired) | striptags }}</td>
+                        <td class="error_right">{{ form_errors(form.yearPublished) | striptags }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <th>{{ form_label(form.isbn) }}</th>
+                    <th> {{ form_label(form.ean) }} </th>
+                    <th> {{ form_label(form.pklibCode) }} </th>
+                    <tr>
+                        <td width="">{{ form_widget(form.isbn) }}</td>
+                        <td>{{form_widget(form.ean)}}</td>
+                        <td>{{form_widget(form.pklibCode)}}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">
+                            <ul style="list-style:none">
+                                {% for error in form.isbn.vars.errors %}
+                                  <li>{{ error.message }}</li>
+                              {% endfor %}
+                          </ul>
+                        </td>
+                        <td class="error_left">
+                            <ul style="list-style:none">
+                                {% for error in form.ean.vars.errors %}
+                                  <li>{{ error.message }}</li>
+                              {% endfor %}
+                          </ul>
+                        </td>
+                        <td class="error_right">{{ form_errors(form.pklibCode) | striptags }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <th>{{ form_label(form.format) }}</th>
+                    <th> {{ form_label(form.color) }} </th>
+                    <th> {{ form_label(form.volume) }} </th>
+                    <tr>
+                        <td width="">{{ form_widget(form.format) }}</td>
+                        <td>{{form_widget(form.color)}}</td>
+                        <td>{{form_widget(form.volume)}}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">{{ form_errors(form.format) | striptags }}</td>
+                        <td class="error_left">{{ form_errors(form.color) | striptags }}</td>
+                        <td class="error_right">{{ form_errors(form.volume) | striptags }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <th>{{ form_label(form.cdNumber) }}</th>
+                    <th> {{ form_label(form.location) }} </th>
+                    <th> {{ form_label(form.language) }} </th>
+                    <tr>
+                        <td width="">{{ form_widget(form.cdNumber) }}</td>
+                        <td>{{form_widget(form.location)}}</td>
+                        <td>{{form_widget(form.language)}}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">{{ form_errors(form.cdNumber) | striptags }}</td>
+                        <td class="error_left">{{ form_errors(form.location) | striptags }}</td>
+                        <td class="error_right">{{ form_errors(form.language) | striptags }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <th>{{ form_label(form.acquisition) }}</th>
+                    <th> {{ form_label(form.state) }} </th>
+                    <tr>
+                        <td>{{ form_widget(form.acquisition) }}</td>
+                        <td>{{ form_widget(form.state) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">{{ form_errors(form.acquisition) | striptags }}</td>
+                        <td class="error_right">{{ form_errors(form.state) | striptags }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+                    <tr>
+                        <th>{{ form_label(form.coverPicture) }}*</th>
+                        <th>{{ form_label(form.summary) }}*</th>
+                    </tr>
+                    <tr>
+                        <td>{{ form_widget(form.coverPicture.file) }}</td>
+                        <td>{{ form_widget(form.summary.file) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left">{{ form_errors(form.coverPicture.file) | striptags }}</td>
+                        <td class="error_right">{{ form_errors(form.summary.file) | striptags }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate">
+                    <th> {{ form_label(form.subCategories) }} </th>
+                    <tr>
+                        <td>{{ form_widget(form.subCategories) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="error_left" >{{ form_errors(form.subCategories) }}</td>
+                    </tr>
+                </table>
+
+                <table width="100%" style="border-spacing:15px 0px; border-collapse:separate; margin-top:15px"> 
+                  <tr>
+                    <td><a href="{{ path('homepage') }}" class="btn btn-default" style="width:100%; margin-bottom:20px "> cancel </a></td>
+                    <td><input class="form-control" style="font-weight:bold; width:100%; color:white; background-color:#20B2AA; margin-bottom:20px;" type="submit" value="{{ 'Submit'|trans }}" /></td>
+                 </tr>
+               </table>                
+               {{form_end(form)}}
+			</div>
+           
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

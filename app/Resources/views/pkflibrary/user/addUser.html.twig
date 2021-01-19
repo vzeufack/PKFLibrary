@@ -1,0 +1,169 @@
+{% extends 'pkflibrary/base.html.twig' %}
+
+{% block menu %}
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right" style="font-weight:bold">
+            <li>
+                <a href="{{ path('homepage',{'page': page}) }}"><i class="fa fa-home"></i> Home</a>
+            </li>
+            {% if is_granted("ROLE_ADMIN") %}
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Management <b class="caret"></b></a>
+                    <ul class="dropdown-menu"  >
+                        <li class="active">
+                           <a href="{{ path('AdminUserEnableList',{'page': 1}) }}" style="font-family:calibri"> <i class="fa fa-user"></i> User Management</a>
+                       </li>
+                       <li>
+                        <a href="{{ path('manageBorrows') }}" style="font-family:calibri" > <i class="fa fa-book"></i>  Borrow Management</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('categoryList') }}" style="font-family:calibri" > <i class="fa fa-navicon"></i>  Category Management</a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> My Account <b class="caret"></b></a>
+            <ul class="dropdown-menu"  >
+                <li>
+                    <a href="{{ path('manageBorrows') }}" style="font-family:calibri"> <i class="fa fa-book"></i> Borrow Reports </a>
+                </li>
+                <li>
+                  <a href="{{ path('UserDetail',{'id': app.user.Id ,'page': page}) }}" style="font-family:calibri"><i class="fa fa-user"></i>My Personal data</a>
+                </li>
+
+            </ul>
+        </li>
+        <li>
+            <a href="{{ path('about') }}">About</a>
+        </li>
+        <li>
+            <a href="{{ path('help') }}">Help</a>
+        </li>
+        <li>
+          <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+        </li>
+
+ </ul>
+</div>
+<!-- /.navbar-collapse -->
+{% endblock %}
+
+{% block status %}
+    <li><a class="active" href="#" style="color:black">Management / User Management / Add user </a>
+    </li>
+{% endblock %}
+
+{% block body %}
+  <div class="panel panel-default" style="margin:auto; width:60%;">
+    <div class="panel-heading">
+      <h3 style="text-align:center">Create Account</h3>
+    </div>
+
+    {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+
+    <p style="margin-left:2.2%; margin-top:10px; font-family:calibri; color:blue; font-style:italic"> Note: All fields label ending with * are compulsory! </p>
+    
+    <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+      <th>{{ form_label(form.firstName) }}</th>
+      <th> {{ form_label(form.familyName) }} * </th>
+      <tr>
+        <td>{{ form_widget(form.firstName) }}</td>
+        <td>{{ form_widget(form.familyName) }}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="error_right">{{ form_errors(form.familyName) | striptags }}</td>
+      </tr>
+    
+      <th>{{ form_label(form.studentID) }}</th>
+      <th> {{ form_label(form.username) }} * </th>
+      <tr>
+        <td>{{ form_widget(form.studentID) }}</td>
+        <td>{{ form_widget(form.username) }}</td>
+      </tr>
+      <tr>
+        <td class="error_left">{{ form_errors(form.studentID) | striptags }}</td>
+        <td class="error_right">{{ form_errors(form.username) | striptags }}</td>
+      </tr>
+    
+      <th><i class="fa fa-key fa-fw"></i></span>{{ form_label(form.plainPassword.first) }} *</th>
+      <th> {{ form_label(form.plainPassword.second) }} * </th>
+      <tr>
+        <td>{{ form_widget(form.plainPassword.first) }}</td>
+        <td>{{ form_widget(form.plainPassword.second) }}</td>
+      </tr>
+      <tr>
+        <td class="error_left">{{ form_errors(form.plainPassword.first) | striptags }}</td>
+        <td class="error-right">{{ form_errors(form.plainPassword.second) | striptags }}</td>
+      </tr>
+
+      <th><i class="fa fa-envelope-o fa-fw"></i> {{ form_label(form.email) }} *</th>
+      <th> <i class="fa fa-phone"></i> {{ form_label(form.phoneNumber) }} * </th>
+      <tr>
+        <td>{{ form_widget(form.email) }}</td>
+        <td>{{ form_widget(form.phoneNumber) }}</td>
+      </tr>
+      <tr>
+        <td class="error_left">{{ form_errors(form.email) | striptags }} </td>
+        <td class="error_right">
+        <ul style="list-style:none">
+         {% for error in form.phoneNumber.vars.errors %}
+          <li>{{ error.message }}</li>
+         {% endfor %}
+        </ul>
+        </td>
+      </tr>
+
+      <th> {{ form_label(form.address) }} *</th>
+      <th> <i class="fa fa-user fa-fw"></i>{{ form_label(form.image, 'Profile Picture') }} * </th>
+      <tr>
+        <td>{{ form_widget(form.address) }}</td>
+        <td>{{ form_widget(form.image.file) }}</td>
+      </tr>
+      <tr>
+        <td class="error_left">{{ form_errors(form.address) | striptags }}</td>
+        <td class="error_right">{{ form_errors(form.image.file) | striptags }}</td>
+      </tr>
+    </table>       
+    
+    <table width="100%" style="border-spacing:15px 0px; border-collapse:separate"> 
+      <th>{{ form_label(form.userCategory) }} *</th>
+      <th> {{ form_label(form.batch) }} </th>
+      <th> {{ form_label(form.specialty) }} </th>
+      <tr>
+        <td>{{ form_widget(form.userCategory) }}</td>
+        <td>{{form_widget(form.batch)}}</td>
+        <td>{{form_widget(form.specialty)}}</td>
+      </tr>
+    </table>  
+
+    <table width="100%" style="border-spacing:15px 0px; border-collapse:separate; margin-top:15px"> 
+      <tr>
+        <td><a href="{{ path('AdminUserEnableList', {'page':1}) }}" class="btn btn-default" style="width:100%; margin-bottom:20px "> cancel </a></td>
+        <td><input class="form-control" style="font-weight:bold; width:100%; color:white; background-color:#20B2AA; margin-bottom:20px" type="submit" value="{{ 'Submit'|trans }}" /></td>
+      </tr>
+    </table> 
+    <div class="input-group" style="">
+    </div>
+  </div>
+  <script type="text/javascript" src="{{asset('assets/js/jquery.js')}}"></script>
+  <script>
+    $(document).ready(function(event) {
+        $('#app_user_registration_userCategory').change(function(e){
+
+          if ( ! ($('#app_user_registration_userCategory').val() === "Undergraduate" )){
+             document.getElementById("app_user_registration_studentID").required = false;
+              document.getElementById("app_user_registration_batch").required = false;
+          }
+          else{
+            document.getElementById("app_user_registration_studentID").required = true;
+            document.getElementById("app_user_registration_batch").required = true;
+          }
+         }).change();
+    });
+  </script>
+  {{ form_end(form) }}
+{% endblock %}

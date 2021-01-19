@@ -1,0 +1,113 @@
+{% extends 'pkflibrary/book/book_list.html.twig '%}
+
+{% block menu %}
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right" style="font-weight:bold;background-color:black;">
+            <li>
+                <a href="{{ path('homepage') }}"><i class="fa fa-home"></i> Home</a>
+            </li>
+            {% if is_granted("ROLE_ADMIN") %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Management <b class="caret"></b></a>
+                    <ul class="dropdown-menu"  >
+                        <li>
+                         <a href="{{ path('AdminUserEnableList',{'page': 1}) }}" style="font-family:calibri"> <i class="fa fa-user"></i> User Management</a>
+                     </li>
+                     <li>
+                        <a href="{{ path('manageBorrows') }}" style="font-family:calibri" > <i class="fa fa-book"></i> Borrow Management</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('categoryList') }}" style="font-family:calibri" > <i class="fa fa-navicon"></i> Category Management</a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+        <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"> My Account <b class="caret"></b></a>
+            <ul class="dropdown-menu"  >
+                <li class="active">
+                    <a href="{{ path('borrow', {'userId': app.user.id, 'bookId':-1}) }}" style="font-family:calibri"> <i class="fa fa-book"></i> Borrow Report </a>
+                </li>
+               <li>
+                  <a href="{{ path('UserDetail',{'id': app.user.Id ,'page': 1}) }}" style="font-family:calibri"><i class="fa fa-user"></i> My Personal data</a>
+               </li>
+
+           </ul>
+       </li>
+        <li>
+            <a href="{{ path('about') }}">About</a>
+        </li>
+        <li>
+            <a href="{{ path('help') }}">Help</a>
+        </li>
+        <li>
+           <a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+       </li>
+   </ul>
+</div>
+<!-- /.navbar-collapse -->
+{% endblock %}
+
+{% block status %}
+	<li style="">My Account   /   Borrow Reports</li>
+{% endblock %}
+
+{% block searchAdd %}
+{% endblock %}
+
+{% block content %}
+	<!-- Advanced Tables -->
+	<div class="panel panel-default" style="margin-top:2%">
+		<div class="panel-heading" style="text-align:center; font-weight:bold">
+			My Borrows
+		</div>
+		<div class="panel-body">
+			<div class="table-responsive">
+				<table class="table table-striped table-bordered table-hover" id="dataTables-example">
+					<thead>
+						<tr>
+							<th>Date Requested</th>
+							<th>Book Title</th>
+							<th>Author</th>
+							<th>Status</th>
+							<th>Due date</th>
+						</tr>
+					</thead>
+					<tbody>
+					{% for entry in booksBorrowed if (entry.status != 'Returned' and entry.status != 'Returned late')  %}
+						{% if entry.status == 'Late' %}
+						    <tr class="odd gradeX" style="color:red">
+						{% else %}
+							<tr class="odd gradeX">
+						{% endif %}
+							<td>{{entry.dateRequested|date('F j, Y')}}</td>
+							<td>{{entry.book.title}}</td>
+							<td>{{entry.book.author}}</td>
+							{% if entry.status != 'Late' %}						
+								<td class="center" id="status{{entry.user.id}}{{entry.book.id}}">{{entry.status}}</td>
+							{% else %}
+								<td class="center" id="status{{entry.user.id}}{{entry.book.id}}">{{entry.status}} of {{entry.delay}}</td>
+							{% endif %}
+							<td class="center">{{entry.dueDate|date('F j, Y')}}</td>
+						</tr>
+					{% endfor %}
+						{#<tr class="even gradeC">
+							<td>Trident</td>
+							<td>Internet Explorer 5.0</td>
+							<td>Win 95+</td>
+							<td class="center">5</td>
+							<td class="center">C</td>
+						</tr>#}
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+	</div>
+	<!--End Advanced Tables -->
+{% endblock %}
+
+{% block pagination %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+    {% block fos_user_content %}
+
+
+
+     <div class="col-md-6 col-sm-offset-3 ">
+        <div class="panel panel-default" style="margin:auto; width:400px">
+            <div class="panel-heading" style="color:green">
+                <h4 style="text-align:center"><i class="fa fa-check"></i>  Registration succeeded!</h4>
+            </div>                       
+            <div class="panel-body" style=""> 
+                {% if user.userCategory == 'Lecturer' %}
+                    <h5 style="text-align:center; font-weight:bold"> Your account is currently disabled. Your identity will be validated and your account enabled very soon. Thank You!  </h5>
+                {% else %}
+                    <h5 style="text-align:center; font-weight:bold"> Your account is currently disabled. You must meet the librarian to validate your identity. Thank You!  </h5>
+                {% endif %}
+                <a href="{{ path('fos_user_security_login') }}" style="float:right; font-family:calibri; font-weight:bold" ><i class=" fa fa-sign-in "></i> Login </a>
+
+            </div>                        
+        </div>
+    </div>
+
+
+{% endblock fos_user_content %}
+
+{% block footer %}
+                <div class="row" style="margin-top:80%;position: fixed;botom: 0;width:100%">
+                   <!-- Footer -->
+                     <center>
+                        <p style="font-weight:bold;height:90px;color:white;background-color: black;margin-left: -100px; margin-bottom:0px; ">Copyright &copy; PKFokam Institute Of Excellence</p>
+                    </center>
+                   </div>
+ {% endblock %}
+
+

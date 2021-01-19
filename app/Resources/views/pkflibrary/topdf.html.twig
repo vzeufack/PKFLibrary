@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block stylesheets %}
+        <link rel="shortcut icon" type="image/x-icon" href="logopkf.ico" />
+        <!-- Bootstrap Core CSS -->
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/css/bootstrap.min.css')}}" rel="stylesheet" />
+        <!-- Custom CSS -->
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/css/modern-business.css')}}" rel="stylesheet"/> 
+        <!-- Custom Fonts -->
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css"/> 
+        <!-- TABLE STYLES-->
+        <link href="{{app.request.schemeAndHttpHost ~ asset('assets/js/dataTables/dataTables.bootstrap.css' ) }}" rel="stylesheet" />
+        
+    {% endblock %}
+    <style>
+              .label{
+                font-weight : bold ;
+                color: black;
+                font-size: 14px;
+                
+              }
+              .secondCell{
+                padding-left: 6em;
+              }
+    </style>
+
+ </head>
+
+<body>
+ <div class="modal-fade" role="dialog" style="margin-top:1%; font-family:calibri">
+  <div class="modal-dialog modal-md">
+	<div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabelDetails" style="text-align:center; color:blue"><i class="fa fa-book"></i> Borrow Details</h4>
+              </div>
+              <div class="modal-body row" style="text-align:left">
+                  <div class="" style="font-family:calibri; margin-top:0"> 
+                  <table width="100%" style="border-spacing:15px 2px; border-collapse:separate"> 
+	                	<tr>
+		                	<td>
+			                	<span class="label">Date Requested: </span> {{data.dateRequested|date('F j, Y')}}
+			                	<span class="secondCell">
+			                		<span class="label">User Name: </span>
+			                		{{data.user.familyName}} {{data.user.firstName}}
+			                	<span>
+		                	</td>
+	                	</tr>                	
+	                	<tr>
+	                  		<td><span class="label">User Category: </span>
+	                  				{{data.user.userCategory}}
+	                  			<span class="secondCell">
+	                  				<span class="label">Registration Number:</span>
+	                  				{{data.user.studentID}}
+	                  			</span>
+	                  		</td>
+	                  	</tr> 
+	                  
+	                  <tr>
+                		<td><span class="label">Program and Level of Study:</span> {{data.user.specialty}} {{data.user.batch}}
+                			<span class="secondCell">
+                				<span class="label">Phone Number: </span>
+                				{{data.user.phoneNumber}}
+                			</span>
+                		</td>
+                	  </tr> 
+                		<tr>
+                			<td><span class="label">Email: </span>{{data.user.email}}              				
+                			</td>
+                		</tr>	
+                		<tr>
+                			<td>
+	        					<span class="label">Document Title: </span>
+	        						{{data.book.title}} ({{data.book.subTitle}})
+                			</td>
+                		</tr>
+	                	<tr>
+	                		<td><span class="label">Author(s): </span>{{data.book.author}}
+	                			<span class="secondCell">
+	                				<span class="label">Editor: </span>
+	                				{{data.book.editor}}
+	                			</span>
+	                		</td>	
+	                	</tr>
+	                	<tr>
+	                		<td>
+		                		<span class="label">Edition: </span>{{data.book.edition}}
+		                		<span class="secondCell">
+		                			<span class="label">ISBN : </span>
+		                			{{data.book.isbn}}
+		                		</span>
+		                		<span class="secondCell">
+		                			<span class="label">Code of Reference :</span>
+		                			 {{data.id}}
+		                		</span>
+	                		</td>
+	                		
+	                	</tr>
+	                	
+                  </table>
+                  <h5 style="padding-left: 1.5em;font-weight : bold ;">Dates Borrowed</h5> 
+                  <table width="90%" style="border-spacing:15px 2px; border-collapse:separate; margin-left:20px;" border="1"> 
+                	<tr>
+                	{% for dates in data.datesBorrowed %}     	
+                      <td>
+		                  {{dates.dateBorrowed|date('F j, Y')}}
+                      </td>
+                      {% if loop.index % 6 == 0 %}
+				        </tr><tr> 
+				      {% endif %} 
+                	{% endfor %}
+                	</tr>
+                  </table>
+                  <p></p>
+                  <table width="100%" style="border-spacing:15px 2px; border-collapse:separate"> 
+                  <tr>
+                  	<td><span class="label">Date Returned:</span><span style=" padding-left: 2em;">{{data.dateReturned|date('F j, Y')}}</span></td>
+
+                  </tr>      
+                  </table>
+                  <p></p>
+                </div> 
+              </div>
+    </div>
+   </div>
+  </div>
+</body>
+
+</html>

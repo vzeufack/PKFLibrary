@@ -1,0 +1,12 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: pkflibrary
+    database_user: root
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: zvanel@live.fr
+    mailer_password: null
+    secret: 8e2be667f53a5626e7cdd2db2658342daa54d37d
